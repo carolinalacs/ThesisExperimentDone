@@ -1,0 +1,83 @@
+<html>
+
+<body style = "text-align:center;font-size: 60px; padding: 250px 0;"> 
+
+<div id="wordDiv"/>
+
+</body>
+
+<script>
+
+var t0 = 0 //0 as a placeholder
+var actualOrder = "";
+const trial = new URLSearchParams(window.location.search).get("trial")
+
+// this gets called when the user is done with input
+function calculateTime(t0){
+    const elapsed = performance.now() - t0
+    sessionStorage.setItem("trial" + trial, [elapsed, document.getElementById("textbox").value, actualOrder])
+    console.log(sessionStorage)
+    window.location.href = "MiddlePageStreamFinal.html?trial=" + trial
+}
+
+// changes how the page looks to show textbox
+function prepareTextbox(){
+    var textbox = document.createElement("input");
+    textbox.id = "textbox";
+    textbox.autofocus = true;
+    textbox.style.width = "90%";
+    textbox.style.textAlign = "center";
+
+    var donebutton = document.createElement("button");
+    donebutton.id = "donebutton"
+    donebutton.innerHTML = "Submit."
+
+    document.getElementById("wordDiv").append("Please type below all the words presented." );
+    document.getElementById("wordDiv").appendChild(textbox);
+    document.getElementById("wordDiv").appendChild(donebutton);
+    t0 = performance.now()
+
+    //this is for clicking on the button
+    document.getElementById("donebutton").addEventListener("click", function(){
+        calculateTime(t0)
+    });
+
+}
+
+// delay to change word in miliseconds
+var delay = 10
+var wordList = ["innocent", "virgin", "clean", "church", "pure", "protection", "defend", "security", "safe", "rights", "balance", "equal", "justice", "care", "fair"]
+
+var timer = window.setInterval( function(){
+    if(wordList.length > 0) {
+        var currWordIndex = Math.floor(Math.random() * wordList.length)
+        var currWord = wordList[currWordIndex]
+        actualOrder += wordList[currWordIndex] + " "
+        wordList.splice(currWordIndex, 1)
+        document.getElementById("wordDiv").innerHTML = currWord;
+    } else {
+        // no more words, so stop looping
+        document.getElementById("wordDiv").innerHTML = "";
+   
+        /*
+        paidattention    
+        var button = document.createElement("a");
+        var buttonText = document.createElement("span");
+        button.href = "Textbox.html";
+        buttonText.innerText = "Please click here";
+
+        button.appendChild(buttonText);
+        document.getElementById("wordDiv").appendChild(button);
+        */
+
+        clearInterval(timer)
+
+        //this is the stuff Jaysen is adding
+        prepareTextbox()
+    }
+}, delay);
+
+</script>
+
+
+</html>
